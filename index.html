@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Divya Ratna Gautam — Player Profile</title>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg: #050a0f;
+  --bg2: #0a1628;
+  --bg3: #0d1f3c;
+  --green: #00ff88;
+  --cyan: #00d4ff;
+  --purple: #b845ff;
+  --yellow: #ffd700;
+  --orange: #ff6b35;
+  --red: #ff3366;
+  --white: #e8f4ff;
+  --muted: #4a6fa5;
+  --border: rgba(0,212,255,0.2);
+  --card: rgba(10,22,40,0.9);
+  --glow-green: 0 0 20px rgba(0,255,136,0.5);
+  --glow-cyan: 0 0 20px rgba(0,212,255,0.5);
+  --glow-purple: 0 0 20px rgba(184,69,255,0.5);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Rajdhani',sans-serif;overflow-x:hidden;}
+
+/* SCANLINE OVERLAY */
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);pointer-events:none;z-index:9999;}
+
+/* GRID BG */
+.grid-bg{position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(0,212,255,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,212,255,0.03) 1px,transparent 1px);
+  background-size:40px 40px;animation:gridPulse 8s ease infinite;}
+@keyframes gridPulse{0%,100%{opacity:0.5;}50%{opacity:1;}}
+
+/* CORNER DECORATIONS */
+.corner{position:fixed;width:60px;height:60px;z-index:2;pointer-events:none;}
+.corner-tl{top:10px;left:10px;border-top:2px solid var(--cyan);border-left:2px solid var(--cyan);}
+.corner-tr{top:10px;right:10px;border-top:2px solid var(--cyan);border-right:2px solid var(--cyan);}
+.corner-bl{bottom:10px;left:10px;border-bottom:2px solid var(--cyan);border-left:2px solid var(--cyan);}
+.corner-br{bottom:10px;right:10px;border-bottom:2px solid var(--cyan);border-right:2px solid var(--cyan);}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 3rem;
+  background:rgba(5,10,15,0.95);
+  border-bottom:1px solid var(--border);
+  backdrop-filter:blur(20px);}
+.nav-logo{font-family:'Press Start 2P',monospace;font-size:0.7rem;color:var(--green);
+  text-shadow:var(--glow-green);letter-spacing:0.05em;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{color:var(--muted);text-decoration:none;font-family:'Share Tech Mono',monospace;
+  font-size:0.8rem;letter-spacing:0.1em;text-transform:uppercase;transition:all 0.2s;}
+.nav-links a:hover{color:var(--cyan);text-shadow:var(--glow-cyan);}
+.nav-cta{background:transparent;color:var(--green);border:1px solid var(--green);
+  padding:0.5rem 1.25rem;font-family:'Share Tech Mono',monospace;font-size:0.75rem;
+  cursor:pointer;transition:all 0.2s;letter-spacing:0.1em;text-transform:uppercase;}
+.nav-cta:hover{background:var(--green);color:var(--bg);box-shadow:var(--glow-green);}
+
+section{position:relative;z-index:1;}
+
+/* ═══════════════ HERO ═══════════════ */
+#hero{min-height:100vh;display:flex;align-items:center;
+  padding:6rem 3rem 3rem;max-width:1300px;margin:0 auto;gap:4rem;}
+
+.hero-left{flex:1;}
+
+.player-tag{display:inline-flex;align-items:center;gap:0.6rem;
+  background:rgba(0,255,136,0.08);border:1px solid rgba(0,255,136,0.3);
+  padding:0.4rem 1rem;margin-bottom:1.5rem;
+  font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--green);
+  animation:fadeUp 0.5s ease both;}
+.player-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:blink 1s step-end infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0;}}
+
+.hero-name{font-family:'Orbitron',monospace;font-size:clamp(2rem,5vw,4rem);
+  font-weight:900;line-height:1.1;letter-spacing:-0.02em;
+  animation:fadeUp 0.6s ease 0.1s both;}
+.hero-name .first{color:var(--white);}
+.hero-name .last{color:var(--cyan);text-shadow:var(--glow-cyan);}
+
+.hero-class{font-family:'Share Tech Mono',monospace;font-size:0.85rem;
+  color:var(--purple);margin:1rem 0;letter-spacing:0.1em;
+  animation:fadeUp 0.6s ease 0.2s both;}
+.hero-class::before{content:'> ';color:var(--green);}
+
+.hero-bio{font-size:1.05rem;color:var(--muted);line-height:1.7;
+  max-width:560px;margin-bottom:1.5rem;
+  animation:fadeUp 0.6s ease 0.3s both;}
+
+/* STAT BARS */
+.stat-bars{margin:1.5rem 0;animation:fadeUp 0.6s ease 0.35s both;}
+.stat-row{display:flex;align-items:center;gap:1rem;margin-bottom:0.75rem;}
+.stat-label{font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+  color:var(--muted);width:120px;letter-spacing:0.05em;}
+.stat-bar-wrap{flex:1;height:8px;background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden;}
+.stat-bar-fill{height:100%;position:relative;
+  animation:barLoad 1.5s ease forwards;width:0;}
+@keyframes barLoad{to{width:var(--target-width);}}
+.stat-bar-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;
+  background:inherit;filter:brightness(2);}
+.stat-value{font-family:'Share Tech Mono',monospace;font-size:0.7rem;
+  color:var(--white);width:50px;text-align:right;}
+
+.hero-badges{display:flex;flex-wrap:wrap;gap:0.6rem;margin:1.5rem 0;
+  animation:fadeUp 0.6s ease 0.4s both;}
+.badge-pill{display:flex;align-items:center;gap:0.4rem;
+  border:1px solid;padding:0.35rem 0.8rem;
+  font-family:'Share Tech Mono',monospace;font-size:0.68rem;}
+.badge-pill.gold{border-color:var(--yellow);color:var(--yellow);background:rgba(255,215,0,0.06);}
+.badge-pill.blue{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,0.06);}
+.badge-pill.green{border-color:var(--green);color:var(--green);background:rgba(0,255,136,0.06);}
+
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;
+  animation:fadeUp 0.6s ease 0.45s both;}
+.btn-game{padding:0.8rem 1.75rem;font-family:'Share Tech Mono',monospace;
+  font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;
+  text-decoration:none;cursor:pointer;border:none;transition:all 0.2s;display:inline-block;}
+.btn-game.primary{background:var(--cyan);color:var(--bg);
+  clip-path:polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%);}
+.btn-game.primary:hover{background:var(--green);box-shadow:var(--glow-green);}
+.btn-game.secondary{background:transparent;color:var(--cyan);border:1px solid var(--cyan);}
+.btn-game.secondary:hover{background:rgba(0,212,255,0.1);box-shadow:var(--glow-cyan);}
+
+/* PLAYER CARD (right side) */
+.hero-right{flex-shrink:0;animation:fadeUp 0.6s ease 0.2s both;}
+.player-card{width:280px;background:var(--card);border:1px solid var(--border);
+  padding:2rem;position:relative;
+  clip-path:polygon(0 0,calc(100% - 20px) 0,100% 20px,100% 100%,20px 100%,0 calc(100% - 20px));}
+.player-card::before{content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(0,212,255,0.05),transparent,rgba(184,69,255,0.05));
+  pointer-events:none;}
+.card-header{display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:1.5rem;}
+.card-title{font-family:'Press Start 2P',monospace;font-size:0.5rem;color:var(--cyan);}
+.card-level{font-family:'Press Start 2P',monospace;font-size:0.5rem;color:var(--yellow);}
+.player-avatar{width:80px;height:80px;margin:0 auto 1.25rem;
+  background:linear-gradient(135deg,var(--bg3),var(--bg2));
+  border:2px solid var(--cyan);display:flex;align-items:center;justify-content:center;
+  font-size:2.5rem;position:relative;box-shadow:var(--glow-cyan);}
+.player-avatar::after{content:'';position:absolute;inset:-4px;border:1px solid rgba(0,212,255,0.2);}
+.card-name{font-family:'Orbitron',monospace;font-size:0.8rem;font-weight:700;
+  text-align:center;color:var(--white);margin-bottom:0.3rem;}
+.card-class{font-family:'Share Tech Mono',monospace;font-size:0.65rem;
+  color:var(--purple);text-align:center;margin-bottom:1.5rem;}
+.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:0.6rem;}
+.card-stat{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  padding:0.5rem;text-align:center;}
+.card-stat-val{font-family:'Orbitron',monospace;font-size:0.9rem;font-weight:700;color:var(--green);}
+.card-stat-label{font-family:'Share Tech Mono',monospace;font-size:0.55rem;color:var(--muted);margin-top:0.15rem;}
+.xp-bar-wrap{margin-top:1.25rem;}
+.xp-label{display:flex;justify-content:space-between;
+  font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--muted);margin-bottom:0.4rem;}
+.xp-bar{height:6px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,215,0,0.2);position:relative;}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--yellow),var(--orange));width:73%;
+  box-shadow:0 0 8px rgba(255,215,0,0.5);animation:barLoad 2s ease forwards;--target-width:73%;}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+
+/* DIVIDER */
+.section-divider{display:flex;align-items:center;gap:1rem;padding:0 3rem;margin:0;
+  position:relative;z-index:1;}
+.divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);}
+.divider-text{font-family:'Press Start 2P',monospace;font-size:0.45rem;color:var(--muted);white-space:nowrap;}
+
+/* ═══════════════ STACK STRIP ═══════════════ */
+.stack-strip{border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:1.25rem 3rem;display:flex;align-items:center;gap:2rem;
+  background:rgba(10,22,40,0.6);position:relative;z-index:1;overflow:hidden;}
+.stack-label{font-family:'Press Start 2P',monospace;font-size:0.45rem;color:var(--muted);
+  white-space:nowrap;letter-spacing:0.05em;}
+.stack-icons{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:center;}
+.stack-item{font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--muted);
+  display:flex;align-items:center;gap:0.4rem;transition:all 0.2s;
+  border:1px solid transparent;padding:0.25rem 0.5rem;}
+.stack-item:hover{color:var(--cyan);border-color:rgba(0,212,255,0.3);
+  background:rgba(0,212,255,0.05);text-shadow:var(--glow-cyan);}
+
+/* ═══════════════ SECTION COMMONS ═══════════════ */
+.game-section{padding:5rem 3rem;max-width:1300px;margin:0 auto;}
+.section-header{margin-bottom:3rem;}
+.section-header.center{text-align:center;}
+.section-eyebrow{font-family:'Press Start 2P',monospace;font-size:0.5rem;
+  color:var(--green);letter-spacing:0.1em;margin-bottom:1rem;display:block;}
+.section-title{font-family:'Orbitron',monospace;font-size:clamp(1.5rem,3vw,2.5rem);
+  font-weight:900;line-height:1.1;letter-spacing:-0.01em;}
+.section-title .accent{color:var(--cyan);}
+
+/* ═══════════════ ABOUT ═══════════════ */
+#about-wrap{background:rgba(10,22,40,0.4);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+#about{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+.about-text p{color:var(--muted);line-height:1.8;font-size:1rem;margin-bottom:1rem;}
+.about-text p strong{color:var(--white);}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-top:1.5rem;}
+.stat-box{background:var(--card);border:1px solid var(--border);padding:1rem;
+  position:relative;transition:border-color 0.2s;}
+.stat-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple));opacity:0;transition:opacity 0.3s;}
+.stat-box:hover{border-color:rgba(0,212,255,0.4);}
+.stat-box:hover::before{opacity:1;}
+.stat-n{font-family:'Orbitron',monospace;font-size:1.75rem;font-weight:900;color:var(--green);}
+.stat-d{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);margin-top:0.2rem;}
+
+/* SKILL TREE */
+.skill-tree{display:flex;flex-direction:column;gap:1rem;}
+.skill-tree-title{font-family:'Press Start 2P',monospace;font-size:0.5rem;color:var(--yellow);margin-bottom:0.5rem;}
+.skill-entry{display:flex;align-items:center;gap:1rem;}
+.skill-name-label{font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--white);width:130px;flex-shrink:0;}
+.skill-bar-outer{flex:1;height:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);position:relative;}
+.skill-bar-inner{height:100%;position:relative;animation:barLoad 1.8s ease forwards;width:0;}
+.skill-bar-inner.s1{background:linear-gradient(90deg,#00ff88,#00d4ff);--target-width:92%;}
+.skill-bar-inner.s2{background:linear-gradient(90deg,#00d4ff,#b845ff);--target-width:88%;}
+.skill-bar-inner.s3{background:linear-gradient(90deg,#b845ff,#ff6b35);--target-width:85%;}
+.skill-bar-inner.s4{background:linear-gradient(90deg,#ffd700,#ff3366);--target-width:82%;}
+.skill-bar-inner.s5{background:linear-gradient(90deg,#00ff88,#ffd700);--target-width:80%;}
+.skill-bar-inner.s6{background:linear-gradient(90deg,#00d4ff,#00ff88);--target-width:78%;}
+.skill-bar-inner.s7{background:linear-gradient(90deg,#ff6b35,#b845ff);--target-width:75%;}
+.skill-bar-inner.s8{background:linear-gradient(90deg,#b845ff,#00d4ff);--target-width:72%;}
+.skill-pct{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);width:36px;text-align:right;}
+
+/* ═══════════════ CP / ACHIEVEMENTS ═══════════════ */
+#cp-wrap{background:rgba(5,10,15,0.8);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+#cp{display:grid;grid-template-columns:1fr 1fr;gap:3rem;}
+.cp-cards{display:flex;flex-direction:column;gap:1rem;}
+.cp-platform-card{background:var(--card);border:1px solid var(--border);padding:1.5rem;
+  display:flex;align-items:center;gap:1.5rem;position:relative;
+  transition:all 0.25s;cursor:default;}
+.cp-platform-card:hover{border-color:rgba(0,212,255,0.4);transform:translateX(6px);}
+.cp-platform-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.cp-platform-card.lc::before{background:var(--yellow);}
+.cp-platform-card.cc::before{background:var(--orange);}
+.cp-icon{width:48px;height:48px;display:flex;align-items:center;justify-content:center;
+  font-size:1.75rem;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);}
+.cp-info{flex:1;}
+.cp-platform-name{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.1em;}
+.cp-rating-val{font-family:'Orbitron',monospace;font-size:1.75rem;font-weight:900;line-height:1;}
+.cp-rating-val.gold{color:var(--yellow);text-shadow:0 0 15px rgba(255,215,0,0.4);}
+.cp-rating-val.orange{color:var(--orange);text-shadow:0 0 15px rgba(255,107,53,0.4);}
+.cp-badge-label{font-family:'Share Tech Mono',monospace;font-size:0.7rem;margin-top:0.2rem;}
+.cp-badge-label.gold{color:var(--yellow);}
+.cp-badge-label.orange{color:var(--orange);}
+.cp-meta{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--muted);margin-top:0.2rem;}
+
+/* CONTEST LOG */
+.contest-log{background:var(--card);border:1px solid var(--border);padding:1.5rem;}
+.contest-log-header{font-family:'Press Start 2P',monospace;font-size:0.45rem;color:var(--cyan);
+  margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--border);}
+.log-entry{display:flex;align-items:center;gap:1rem;padding:0.75rem 0;
+  border-bottom:1px solid rgba(255,255,255,0.03);}
+.log-entry:last-child{border-bottom:none;}
+.log-icon{font-size:1.1rem;width:28px;text-align:center;}
+.log-info{flex:1;}
+.log-contest{font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--white);}
+.log-platform{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--muted);}
+.log-rank{font-family:'Orbitron',monospace;font-size:0.8rem;font-weight:700;color:var(--green);text-align:right;}
+.log-pct{font-family:'Share Tech Mono',monospace;font-size:0.6rem;color:var(--muted);text-align:right;}
+
+/* ═══════════════ PROJECTS / QUESTS ═══════════════ */
+#projects{padding:5rem 3rem;max-width:1300px;margin:0 auto;}
+.quest-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:1.25rem;}
+.quest-card{background:var(--card);border:1px solid var(--border);padding:1.75rem;
+  position:relative;transition:all 0.25s;overflow:hidden;}
+.quest-card::after{content:'';position:absolute;inset:0;opacity:0;transition:opacity 0.3s;
+  background:linear-gradient(135deg,rgba(0,212,255,0.03),transparent);}
+.quest-card:hover{border-color:rgba(0,212,255,0.35);transform:translateY(-4px);}
+.quest-card:hover::after{opacity:1;}
+.quest-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--cyan),var(--purple),var(--green));
+  opacity:0;transition:opacity 0.3s;}
+.quest-card:hover::before{opacity:1;}
+.quest-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1rem;}
+.quest-emoji{font-size:2rem;}
+.quest-difficulty{font-family:'Press Start 2P',monospace;font-size:0.4rem;padding:0.3rem 0.5rem;border:1px solid;}
+.quest-difficulty.hard{color:var(--red);border-color:var(--red);background:rgba(255,51,102,0.08);}
+.quest-difficulty.med{color:var(--orange);border-color:var(--orange);background:rgba(255,107,53,0.08);}
+.quest-difficulty.easy{color:var(--green);border-color:var(--green);background:rgba(0,255,136,0.08);}
+.quest-name{font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;margin-bottom:0.5rem;}
+.quest-desc{font-size:0.9rem;color:var(--muted);line-height:1.65;margin-bottom:1.25rem;}
+.quest-tech{display:flex;flex-wrap:wrap;gap:0.35rem;margin-bottom:1.25rem;}
+.tech-tag{font-family:'Share Tech Mono',monospace;font-size:0.62rem;
+  background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);
+  padding:0.2rem 0.5rem;color:var(--cyan);}
+.quest-footer{display:flex;justify-content:space-between;align-items:center;}
+.quest-xp{font-family:'Press Start 2P',monospace;font-size:0.4rem;color:var(--yellow);}
+.quest-link{font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--muted);
+  text-decoration:none;transition:color 0.2s;display:flex;align-items:center;gap:0.3rem;}
+.quest-link:hover{color:var(--cyan);}
+
+/* ═══════════════ SKILLS ═══════════════ */
+#skills-wrap{background:rgba(10,22,40,0.4);border-top:1px solid var(--border);border-bottom:1px solid var(--border);}
+#skills{padding:5rem 3rem;max-width:1300px;margin:0 auto;}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:0.75rem;margin-top:2.5rem;}
+.skill-chip{background:var(--card);border:1px solid var(--border);padding:0.9rem 1rem;
+  display:flex;align-items:center;gap:0.6rem;transition:all 0.2s;position:relative;overflow:hidden;}
+.skill-chip::before{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;transform:scaleX(0);
+  transition:transform 0.3s;transform-origin:left;}
+.skill-chip:hover{border-color:rgba(0,212,255,0.35);}
+.skill-chip:hover::before{transform:scaleX(1);}
+.skill-chip.adv::before{background:var(--green);}
+.skill-chip.int::before{background:var(--cyan);}
+.skill-chip.beg::before{background:var(--purple);}
+.skill-chip-icon{font-size:1.1rem;flex-shrink:0;}
+.skill-chip-name{font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--white);display:block;}
+.skill-chip-level{font-family:'Share Tech Mono',monospace;font-size:0.55rem;margin-top:0.1rem;}
+.skill-chip.adv .skill-chip-level{color:var(--green);}
+.skill-chip.int .skill-chip-level{color:var(--cyan);}
+.skill-chip.beg .skill-chip-level{color:var(--purple);}
+
+/* ═══════════════ EDUCATION / QUEST LOG ═══════════════ */
+#education{padding:5rem 3rem;max-width:1300px;margin:0 auto;}
+.quest-log{margin-top:2.5rem;position:relative;}
+.quest-log::before{content:'';position:absolute;left:18px;top:0;bottom:0;
+  width:1px;background:linear-gradient(180deg,var(--cyan),var(--purple),transparent);}
+.log-item{display:flex;gap:2rem;margin-bottom:2rem;padding-left:3rem;position:relative;}
+.log-dot{position:absolute;left:0;top:6px;width:36px;height:36px;
+  background:var(--bg2);border:2px solid var(--cyan);display:flex;align-items:center;
+  justify-content:center;font-size:0.9rem;box-shadow:var(--glow-cyan);}
+.log-content{background:var(--card);border:1px solid var(--border);padding:1.25rem;flex:1;
+  position:relative;transition:border-color 0.2s;}
+.log-content:hover{border-color:rgba(0,212,255,0.35);}
+.log-content::before{content:'◀';position:absolute;left:-10px;top:10px;
+  font-size:0.6rem;color:var(--cyan);}
+.log-date{font-family:'Press Start 2P',monospace;font-size:0.4rem;color:var(--cyan);margin-bottom:0.5rem;}
+.log-title{font-family:'Orbitron',monospace;font-size:0.95rem;font-weight:700;margin-bottom:0.25rem;}
+.log-sub{font-family:'Share Tech Mono',monospace;font-size:0.72rem;color:var(--muted);}
+
+/* ═══════════════ CONTACT ═══════════════ */
+#contact-wrap{background:rgba(5,10,15,0.9);border-top:1px solid var(--border);}
+#contact{padding:5rem 3rem;max-width:800px;margin:0 auto;text-align:center;}
+.contact-terminal{background:var(--card);border:1px solid var(--border);padding:2.5rem;
+  margin-top:2.5rem;position:relative;}
+.terminal-bar{display:flex;gap:0.5rem;margin-bottom:1.5rem;}
+.terminal-dot{width:10px;height:10px;border-radius:50%;}
+.terminal-dot.r{background:#ff5f57;}
+.terminal-dot.y{background:#febc2e;}
+.terminal-dot.g{background:#28c840;}
+.terminal-prompt{font-family:'Share Tech Mono',monospace;font-size:0.78rem;color:var(--green);
+  margin-bottom:1.5rem;text-align:left;}
+.terminal-prompt span{color:var(--white);}
+.contact-links{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;margin-top:1.75rem;}
+.contact-btn{font-family:'Share Tech Mono',monospace;font-size:0.72rem;
+  background:transparent;border:1px solid var(--border);padding:0.7rem 1.25rem;
+  color:var(--white);text-decoration:none;transition:all 0.2s;display:flex;align-items:center;gap:0.4rem;}
+.contact-btn:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,212,255,0.06);
+  box-shadow:var(--glow-cyan);}
+.contact-btn.primary-btn{border-color:var(--green);color:var(--green);background:rgba(0,255,136,0.06);}
+.contact-btn.primary-btn:hover{background:var(--green);color:var(--bg);box-shadow:var(--glow-green);}
+
+footer{text-align:center;padding:1.75rem;border-top:1px solid var(--border);position:relative;z-index:1;}
+footer p{font-family:'Share Tech Mono',monospace;font-size:0.65rem;color:var(--muted);}
+footer span{color:var(--green);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity 0.6s ease,transform 0.6s ease;}
+.reveal.visible{opacity:1;transform:none;}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  #hero{flex-direction:column;padding:6rem 1.5rem 3rem;}
+  .hero-right{display:none;}
+  #about,#cp{grid-template-columns:1fr;}
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none;}
+  .game-section,.section-divider,#projects,#skills,#education,#contact{padding-left:1.5rem;padding-right:1.5rem;}
+  .stack-strip{padding:1rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">DRG.EXE</div>
+  <ul class="nav-links">
+    <li><a href="#about-wrap">[ ABOUT ]</a></li>
+    <li><a href="#cp-wrap">[ ACHIEVEMENTS ]</a></li>
+    <li><a href="#projects">[ QUESTS ]</a></li>
+    <li><a href="#skills-wrap">[ SKILLS ]</a></li>
+    <li><a href="#education">[ QUEST LOG ]</a></li>
+    <li><a href="#contact-wrap">[ CONTACT ]</a></li>
+  </ul>
+  <button class="nav-cta" onclick="document.getElementById('contact-wrap').scrollIntoView({behavior:'smooth'})">▶ HIRE ME</button>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="player-tag"><span class="player-tag-dot"></span> PLAYER_STATUS: SEEKING INTERNSHIP 2026</div>
+    <h1 class="hero-name">
+      <span class="first">DIVYA RATNA</span><br>
+      <span class="last">GAUTAM</span>
+    </h1>
+    <p class="hero-class">FULL_STACK_DEV + AI/ML_ENGINEER + COMPETITIVE_PROGRAMMER</p>
+    <p class="hero-bio">Pre-final year B.Tech IT student from Kanpur, India. Building scalable web apps and intelligent systems. LeetCode Knight with 2053 rating. 1000+ problems slain across platforms.</p>
+
+    <div class="stat-bars">
+      <div class="stat-row">
+        <span class="stat-label">FULL STACK</span>
+        <div class="stat-bar-wrap"><div class="stat-bar-fill" style="background:linear-gradient(90deg,#00ff88,#00d4ff);--target-width:90%;"></div></div>
+        <span class="stat-value">90 / 100</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">AI / ML</span>
+        <div class="stat-bar-wrap"><div class="stat-bar-fill" style="background:linear-gradient(90deg,#b845ff,#00d4ff);--target-width:78%;"></div></div>
+        <span class="stat-value">78 / 100</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">ALGORITHMS</span>
+        <div class="stat-bar-wrap"><div class="stat-bar-fill" style="background:linear-gradient(90deg,#ffd700,#ff6b35);--target-width:95%;"></div></div>
+        <span class="stat-value">95 / 100</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">SYSTEM DESIGN</span>
+        <div class="stat-bar-wrap"><div class="stat-bar-fill" style="background:linear-gradient(90deg,#00d4ff,#b845ff);--target-width:65%;"></div></div>
+        <span class="stat-value">65 / 100</span>
+      </div>
+    </div>
+
+    <div class="hero-badges">
+      <div class="badge-pill gold">🏆 LC KNIGHT · 2053</div>
+      <div class="badge-pill blue">⭐⭐⭐ CODECHEF · 1650</div>
+      <div class="badge-pill green">📊 1000+ SOLVED</div>
+      <div class="badge-pill gold">🎓 B.TECH IT · '27</div>
+    </div>
+
+    <div class="hero-actions">
+      <a class="btn-game primary" href="#projects">▶ VIEW QUESTS</a>
+      <a class="btn-game secondary" href="https://github.com/vayugautam" target="_blank">⬡ GITHUB</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="player-card">
+      <div class="card-header">
+        <span class="card-title">PLAYER CARD</span>
+        <span class="card-level">LVL 21</span>
+      </div>
+      <div class="player-avatar">👨‍💻</div>
+      <div class="card-name">DIVYA R. GAUTAM</div>
+      <div class="card-class">[ FULL STACK + ML ENGINEER ]</div>
+      <div class="card-stats">
+        <div class="card-stat"><div class="card-stat-val">2053</div><div class="card-stat-label">LC RATING</div></div>
+        <div class="card-stat"><div class="card-stat-val">1650</div><div class="card-stat-label">CC RATING</div></div>
+        <div class="card-stat"><div class="card-stat-val">1K+</div><div class="card-stat-label">PROBLEMS</div></div>
+        <div class="card-stat"><div class="card-stat-val">10</div><div class="card-stat-label">REPOS</div></div>
+      </div>
+      <div class="xp-bar-wrap">
+        <div class="xp-label"><span>XP PROGRESS</span><span>73% → LVL 22</span></div>
+        <div class="xp-bar"><div class="xp-fill"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK STRIP -->
+<div class="stack-strip">
+  <span class="stack-label">LOADOUT</span>
+  <div class="stack-icons">
+    <span class="stack-item">⚛️ React</span>
+    <span class="stack-item">🟢 Node.js</span>
+    <span class="stack-item">🐍 Python</span>
+    <span class="stack-item">☕ Java</span>
+    <span class="stack-item">🔷 TypeScript</span>
+    <span class="stack-item">🗄️ PostgreSQL</span>
+    <span class="stack-item">🍃 MongoDB</span>
+    <span class="stack-item">🤖 ML/AI</span>
+    <span class="stack-item">🔥 Firebase</span>
+  </div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<div id="about-wrap">
+<section class="game-section" id="about">
+  <div class="about-text reveal">
+    <span class="section-eyebrow">// PLAYER_BIO</span>
+    <h2 class="section-title">ABOUT THE <span class="accent">PLAYER</span></h2>
+    <p style="margin-top:1.5rem;">Pre-final year <strong>B.Tech IT student</strong> from Kanpur, India. Passionate about building fast, scalable web applications and integrating machine learning into real-world systems.</p>
+    <p>Beyond the code editor, I grind competitive programming daily — <strong>LeetCode Knight</strong> with a 2053 rating (Top 3%), CodeChef 3★. Strong DSA foundations, system design knowledge, and a drive to keep levelling up.</p>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="stat-n">10</div><div class="stat-d">// GitHub Repos</div></div>
+      <div class="stat-box"><div class="stat-n">2053</div><div class="stat-d">// LC Rating</div></div>
+      <div class="stat-box"><div class="stat-n">1K+</div><div class="stat-d">// Problems Solved</div></div>
+      <div class="stat-box"><div class="stat-n">'27</div><div class="stat-d">// Graduating</div></div>
+    </div>
+  </div>
+  <div class="reveal" style="padding-top:3.5rem;">
+    <div class="skill-tree-title">▶ SKILL TREE</div>
+    <div class="skill-tree">
+      <div class="skill-entry"><span class="skill-name-label">Java</span><div class="skill-bar-outer"><div class="skill-bar-inner s1"></div></div><span class="skill-pct">92%</span></div>
+      <div class="skill-entry"><span class="skill-name-label">Python</span><div class="skill-bar-outer"><div class="skill-bar-inner s2"></div></div><span class="skill-pct">88%</span></div>
+      <div class="skill-entry"><span class="skill-name-label">React.js</span><div class="skill-bar-outer"><div class="skill-bar-inner s3"></div></div><span class="skill-pct">85%</span></div>
+      <div class="skill-entry"><span class="skill-name-label">Node.js</span><div class="skill-bar-outer"><div class="skill-bar-inner s4"></div></div><span class="skill-pct">82%</span></div>
+      <div class="skill-entry"><span class="skill-name-label">TypeScript</span><div class="skill-bar-outer"><div class="skill-bar-inner s5"></div></div><span class="skill-pct">80%</span></div>
+      <div class="skill-entry"><span class="skill-name-label">ML/TensorFlow</span><div class="skill-bar-outer"><div class="skill-bar-inner s6"></div></div><span class="skill-pct">78%</span></div>
+      <div class="skill-entry"><span class="skill-name-label">PostgreSQL</span><div class="skill-bar-outer"><div class="skill-bar-inner s7"></div></div><span class="skill-pct">75%</span></div>
+      <div class="skill-entry"><span class="skill-name-label">System Design</span><div class="skill-bar-outer"><div class="skill-bar-inner s8"></div></div><span class="skill-pct">65%</span></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ═══ CP / ACHIEVEMENTS ═══ -->
+<div id="cp-wrap">
+<section class="game-section" id="cp">
+  <div class="reveal">
+    <span class="section-eyebrow">// ACHIEVEMENTS_UNLOCKED</span>
+    <h2 class="section-title">COMPETITIVE <span class="accent">ARENA</span></h2>
+    <div class="cp-cards" style="margin-top:2rem;">
+      <div class="cp-platform-card lc reveal">
+        <div class="cp-icon">🏆</div>
+        <div class="cp-info">
+          <div class="cp-platform-name">LeetCode</div>
+          <div class="cp-rating-val gold">2053</div>
+          <div class="cp-badge-label gold">KNIGHT BADGE — TOP 3% GLOBALLY</div>
+          <div class="cp-meta">Weekly Contest #437 · Rank #562</div>
+        </div>
+      </div>
+      <div class="cp-platform-card cc reveal">
+        <div class="cp-icon">⭐</div>
+        <div class="cp-info">
+          <div class="cp-platform-name">CodeChef</div>
+          <div class="cp-rating-val orange">1650</div>
+          <div class="cp-badge-label orange">3 STAR CODER</div>
+          <div class="cp-meta">Starters 176 · Rank #296 (Top 2%)</div>
+        </div>
+      </div>
+      <div class="cp-platform-card reveal" style="border-left:3px solid var(--green);">
+        <div class="cp-icon">📊</div>
+        <div class="cp-info">
+          <div class="cp-platform-name">All Platforms</div>
+          <div class="cp-rating-val" style="color:var(--green);text-shadow:var(--glow-green);">1000+</div>
+          <div class="cp-badge-label" style="color:var(--green);">PROBLEMS SLAIN</div>
+          <div class="cp-meta">LeetCode · CodeChef · DSA Library</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="contest-log">
+      <div class="contest-log-header">▶ RECENT CONTEST LOG</div>
+      <div class="log-entry">
+        <span class="log-icon">🟡</span>
+        <div class="log-info">
+          <div class="log-contest">Weekly Contest #437</div>
+          <div class="log-platform">LeetCode</div>
+        </div>
+        <div>
+          <div class="log-rank">#562</div>
+          <div class="log-pct">TOP 5%</div>
+        </div>
+      </div>
+      <div class="log-entry">
+        <span class="log-icon">🟤</span>
+        <div class="log-info">
+          <div class="log-contest">Starters 176</div>
+          <div class="log-platform">CodeChef</div>
+        </div>
+        <div>
+          <div class="log-rank">#296</div>
+          <div class="log-pct">TOP 2%</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:1.25rem;padding:1.25rem;background:var(--card);border:1px solid rgba(255,215,0,0.2);">
+      <div style="font-family:'Press Start 2P',monospace;font-size:0.4rem;color:var(--yellow);margin-bottom:0.75rem;">▶ ACHIEVEMENTS</div>
+      <div style="display:flex;flex-direction:column;gap:0.5rem;">
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--white);">🏅 Pull Shark — GitHub Achievement</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--white);">🎯 YOLO — GitHub Achievement</div>
+        <div style="font-family:'Share Tech Mono',monospace;font-size:0.7rem;color:var(--white);">🥇 Consistent Top Ranker — Weekly Contests</div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- ═══ QUESTS / PROJECTS ═══ -->
+<section id="projects">
+  <div class="game-section" style="padding-top:5rem;padding-bottom:0;">
+    <div class="section-header center reveal">
+      <span class="section-eyebrow">// COMPLETED_QUESTS</span>
+      <h2 class="section-title">PROJECT <span class="accent">QUEST LOG</span></h2>
+    </div>
+  </div>
+  <div class="game-section" style="padding-top:2rem;">
+  <div class="quest-grid">
+
+    <div class="quest-card reveal">
+      <div class="quest-header">
+        <span class="quest-emoji">💸</span>
+        <span class="quest-difficulty hard">HARD</span>
+      </div>
+      <div class="quest-name">FINVAULT</div>
+      <p class="quest-desc">AI-driven financial management platform. Real-time payment processing, AI-powered insights, bank-grade security, and interactive dashboards.</p>
+      <div class="quest-tech">
+        <span class="tech-tag">React.js</span><span class="tech-tag">Node.js</span><span class="tech-tag">Express.js</span><span class="tech-tag">PostgreSQL</span><span class="tech-tag">AI</span>
+      </div>
+      <div class="quest-footer">
+        <span class="quest-xp">+850 XP</span>
+        <a class="quest-link" href="https://github.com/vayugautam/FinVault" target="_blank">⬡ VIEW REPO →</a>
+      </div>
+    </div>
+
+    <div class="quest-card reveal">
+      <div class="quest-header">
+        <span class="quest-emoji">🏋️</span>
+        <span class="quest-difficulty med">MEDIUM</span>
+      </div>
+      <div class="quest-name">FITSYNC</div>
+      <p class="quest-desc">Comprehensive health & fitness platform with AI-powered nutrition planning, workout tracking, calorie monitoring and visual progress analytics.</p>
+      <div class="quest-tech">
+        <span class="tech-tag">React.js</span><span class="tech-tag">Chart.js</span><span class="tech-tag">Node.js</span><span class="tech-tag">MongoDB</span>
+      </div>
+      <div class="quest-footer">
+        <span class="quest-xp">+650 XP</span>
+        <a class="quest-link" href="https://github.com/vayugautam/bitnbuild_frontend" target="_blank">⬡ VIEW REPO →</a>
+      </div>
+    </div>
+
+    <div class="quest-card reveal">
+      <div class="quest-header">
+        <span class="quest-emoji">🛡️</span>
+        <span class="quest-difficulty hard">HARD</span>
+      </div>
+      <div class="quest-name">SAFECRED</div>
+      <p class="quest-desc">AI-powered loan verification system. Automated document verification, ML-based risk assessment, real-time fraud detection. Built for SIH.</p>
+      <div class="quest-tech">
+        <span class="tech-tag">Python</span><span class="tech-tag">Flask</span><span class="tech-tag">TensorFlow</span><span class="tech-tag">Scikit-learn</span><span class="tech-tag">PostgreSQL</span>
+      </div>
+      <div class="quest-footer">
+        <span class="quest-xp">+900 XP</span>
+        <a class="quest-link" href="https://github.com/vayugautam/SIH-SafeCred" target="_blank">⬡ VIEW REPO →</a>
+      </div>
+    </div>
+
+    <div class="quest-card reveal">
+      <div class="quest-header">
+        <span class="quest-emoji">🎯</span>
+        <span class="quest-difficulty easy">EASY</span>
+      </div>
+      <div class="quest-name">FOCUSFLOW</div>
+      <p class="quest-desc">Python-powered productivity tool for developers and students. Structured work sessions, progress tracking, and focus management utilities.</p>
+      <div class="quest-tech">
+        <span class="tech-tag">Python</span>
+      </div>
+      <div class="quest-footer">
+        <span class="quest-xp">+300 XP</span>
+        <a class="quest-link" href="https://github.com/vayugautam/FocusFlow" target="_blank">⬡ VIEW REPO →</a>
+      </div>
+    </div>
+
+    <div class="quest-card reveal">
+      <div class="quest-header">
+        <span class="quest-emoji">🧮</span>
+        <span class="quest-difficulty hard">LEGEND</span>
+      </div>
+      <div class="quest-name">DSA LIBRARY</div>
+      <p class="quest-desc">1000+ Data Structures & Algorithm solutions in Java. Organized by topic across LeetCode and CodeChef. A living reference for every pattern.</p>
+      <div class="quest-tech">
+        <span class="tech-tag">Java</span><span class="tech-tag">DSA</span><span class="tech-tag">Algorithms</span>
+      </div>
+      <div class="quest-footer">
+        <span class="quest-xp">+9999 XP</span>
+        <a class="quest-link" href="https://github.com/vayugautam/DSA" target="_blank">⬡ VIEW REPO →</a>
+      </div>
+    </div>
+
+    <div class="quest-card reveal" style="border-color:rgba(184,69,255,0.3);background:rgba(184,69,255,0.04);">
+      <div class="quest-header">
+        <span class="quest-emoji">🚀</span>
+        <span class="quest-difficulty" style="color:var(--purple);border-color:var(--purple);background:rgba(184,69,255,0.08);">LOADING...</span>
+      </div>
+      <div class="quest-name">NEW QUEST</div>
+      <p class="quest-desc">Currently learning System Design and Cloud Architecture. New missions in the pipeline — follow on GitHub for updates!</p>
+      <div class="quest-tech">
+        <span class="tech-tag" style="border-color:rgba(184,69,255,0.3);color:var(--purple);">System Design</span>
+        <span class="tech-tag" style="border-color:rgba(184,69,255,0.3);color:var(--purple);">Cloud</span>
+      </div>
+      <div class="quest-footer">
+        <span class="quest-xp" style="color:var(--purple);">??? XP</span>
+        <a class="quest-link" href="https://github.com/vayugautam" target="_blank">⬡ FOLLOW →</a>
+      </div>
+    </div>
+
+  </div>
+  </div>
+</section>
+
+<!-- ═══ SKILLS ═══ -->
+<div id="skills-wrap">
+<section id="skills">
+  <div class="section-header center reveal">
+    <span class="section-eyebrow">// EQUIPPED_SKILLS</span>
+    <h2 class="section-title">TECHNICAL <span class="accent">LOADOUT</span></h2>
+  </div>
+  <div class="skills-grid">
+    <div class="skill-chip adv reveal"><span class="skill-chip-icon">☕</span><div><span class="skill-chip-name">Java</span><span class="skill-chip-level">▲ ADVANCED</span></div></div>
+    <div class="skill-chip adv reveal"><span class="skill-chip-icon">🐍</span><div><span class="skill-chip-name">Python</span><span class="skill-chip-level">▲ ADVANCED</span></div></div>
+    <div class="skill-chip adv reveal"><span class="skill-chip-icon">🟨</span><div><span class="skill-chip-name">JavaScript</span><span class="skill-chip-level">▲ ADVANCED</span></div></div>
+    <div class="skill-chip adv reveal"><span class="skill-chip-icon">⚛️</span><div><span class="skill-chip-name">React.js</span><span class="skill-chip-level">▲ ADVANCED</span></div></div>
+    <div class="skill-chip adv reveal"><span class="skill-chip-icon">🟢</span><div><span class="skill-chip-name">Node.js</span><span class="skill-chip-level">▲ ADVANCED</span></div></div>
+    <div class="skill-chip adv reveal"><span class="skill-chip-icon">🔗</span><div><span class="skill-chip-name">Git & GitHub</span><span class="skill-chip-level">▲ ADVANCED</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">🔷</span><div><span class="skill-chip-name">TypeScript</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">▲</span><div><span class="skill-chip-name">Next.js</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">🌊</span><div><span class="skill-chip-name">Tailwind CSS</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">🗄️</span><div><span class="skill-chip-name">PostgreSQL</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">🍃</span><div><span class="skill-chip-name">MongoDB</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">🤖</span><div><span class="skill-chip-name">ML / TensorFlow</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">🐍</span><div><span class="skill-chip-name">Flask</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">🔥</span><div><span class="skill-chip-name">Firebase</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip int reveal"><span class="skill-chip-icon">📮</span><div><span class="skill-chip-name">REST APIs</span><span class="skill-chip-level">◆ INTERMEDIATE</span></div></div>
+    <div class="skill-chip beg reveal"><span class="skill-chip-icon">☁️</span><div><span class="skill-chip-name">Cloud / AWS</span><span class="skill-chip-level">● LEARNING</span></div></div>
+  </div>
+</section>
+</div>
+
+<!-- ═══ QUEST LOG / EDUCATION ═══ -->
+<section id="education">
+  <div class="section-header reveal">
+    <span class="section-eyebrow">// QUEST_HISTORY</span>
+    <h2 class="section-title">ACADEMIC <span class="accent">QUEST LOG</span></h2>
+  </div>
+  <div class="quest-log">
+    <div class="log-item reveal">
+      <div class="log-dot">🎓</div>
+      <div class="log-content">
+        <div class="log-date">2023 — 2027 (IN PROGRESS)</div>
+        <div class="log-title">B.TECH IN INFORMATION TECHNOLOGY</div>
+        <div class="log-sub">Kanpur, Uttar Pradesh, India</div>
+      </div>
+    </div>
+    <div class="log-item reveal">
+      <div class="log-dot">🏆</div>
+      <div class="log-content">
+        <div class="log-date">ONGOING — ACTIVE GRIND</div>
+        <div class="log-title">LEETCODE KNIGHT — 2053 RATING (TOP 3%)</div>
+        <div class="log-sub">Weekly Contest #437 · Rank #562 · 1000+ problems solved</div>
+      </div>
+    </div>
+    <div class="log-item reveal">
+      <div class="log-dot">⭐</div>
+      <div class="log-content">
+        <div class="log-date">ONGOING — ACTIVE COMPETITOR</div>
+        <div class="log-title">CODECHEF 3 STAR — 1650 RATING</div>
+        <div class="log-sub">Starters 176 · Rank #296 (Top 2%) · Consistent top ranker</div>
+      </div>
+    </div>
+    <div class="log-item reveal">
+      <div class="log-dot">🚀</div>
+      <div class="log-content">
+        <div class="log-date">CURRENT MISSION</div>
+        <div class="log-title">LEARNING: SYSTEM DESIGN + CLOUD ARCHITECTURE</div>
+        <div class="log-sub">Preparing for top-tier SDE internship roles · Summer 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<div id="contact-wrap">
+<section id="contact">
+  <div class="reveal">
+    <span class="section-eyebrow">// SEND_MESSAGE</span>
+    <h2 class="section-title">INITIATE <span class="accent">CONTACT</span></h2>
+  </div>
+  <div class="contact-terminal reveal">
+    <div class="terminal-bar">
+      <div class="terminal-dot r"></div>
+      <div class="terminal-dot y"></div>
+      <div class="terminal-dot g"></div>
+    </div>
+    <div class="terminal-prompt">
+      $ player.status<br>
+      <span>> ACTIVELY SEEKING SDE / ML INTERNSHIP 2026</span><br><br>
+      $ player.availability<br>
+      <span>> IMMEDIATE · SUMMER 2026 · KANPUR, INDIA</span><br><br>
+      $ player.message<br>
+      <span>> "Whether you have a role, project idea, or just want to say hi — inbox is always open."</span>
+    </div>
+    <div class="contact-links">
+      <a class="contact-btn primary-btn" href="mailto:vayugautam249@gmail.com">📧 SEND EMAIL</a>
+      <a class="contact-btn" href="https://github.com/vayugautam" target="_blank">⬡ GITHUB</a>
+      <a class="contact-btn" href="https://www.linkedin.com/in/divya-ratna-gautam-a925a82a0" target="_blank">💼 LINKEDIN</a>
+      <a class="contact-btn" href="https://leetcode.com/badead249/" target="_blank">🟡 LEETCODE</a>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>
+  <p>GAME_OVER? NEVER. // <span>DIVYA RATNA GAUTAM</span> · KANPUR, INDIA · IT'27 · © 2026</p>
+</footer>
+
+<script>
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){ e.target.classList.add('visible'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+reveals.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
